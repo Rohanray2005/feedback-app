@@ -16,22 +16,30 @@ function App() {
   },[])
 
   const fetchFeedback = async ()=>{
-      const response = await fetch(`http://localhost:5000/feedback`)
+      const response = await fetch(`/feedback`) 
       const data = await response.json()
 
       setFeedback(data)
   }
 
-  const handleDelete=(id)=>{
+  const handleDelete= async (id)=>{
     if(window.confirm('Are you sure you want to delete this?')){
+      await fetch(`/feedback/${id}`,{method:'DELETE'})
       setFeedback( feedback.filter((item)=>(
         item.id!==id
     )))
     }
   }
-  const Addfeedback = (newFeedback)=>{
-      newFeedback.id=uuidv4()
-      setFeedback([newFeedback,...feedback])
+  const Addfeedback =async (newFeedback)=>{
+     const response = await fetch('/feedback',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        'body':JSON.stringify(newFeedback)
+     })
+     const data = await response.json()
+      setFeedback([data,...feedback])
   }
   return (
     <Router>
