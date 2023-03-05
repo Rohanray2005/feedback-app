@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from 'uuid'
 import FeedbackItem from "./components/FeedbackItem";
 import FeedbackData from "./Data/FeedbackData"
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import FeedbackList from "./components/FeedbackList";
 import FeedbackStats from "./components/FeedbackStats"
 import FeedbackForm from "./components/FeedbackForm";
@@ -9,7 +9,18 @@ import AboutPage from './pages/AboutPage';
 import {BrowserRouter as Router,Route,Routes} from 'react-router-dom'
 import {Link} from 'react-router-dom'
 function App() {
-  const [feedback,setFeedback] = useState(FeedbackData)
+  const [feedback,setFeedback] = useState([])
+
+  useEffect(()=>{
+      fetchFeedback()
+  },[])
+
+  const fetchFeedback = async ()=>{
+      const response = await fetch(`http://localhost:5000/feedback`)
+      const data = await response.json()
+
+      setFeedback(data)
+  }
 
   const handleDelete=(id)=>{
     if(window.confirm('Are you sure you want to delete this?')){
